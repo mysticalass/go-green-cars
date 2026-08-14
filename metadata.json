@@ -1,0 +1,6 @@
+{
+  "name": "Go Green Cars",
+  "description": "Singapore's 100% Electric Vehicle Car Sharing & Rental Platform with intelligent booking, charging networks, sustainability tracking, and fleet management.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
