@@ -9,7 +9,6 @@ import { LiveCarparksView } from './components/LiveCarparksView';
 import { RatesCalculatorView } from './components/RatesCalculatorView';
 import { SustainabilityView } from './components/SustainabilityView';
 import { AdminFleetDashboard } from './components/AdminFleetDashboard';
-import { ProductArchitectureView } from './components/ProductArchitectureView';
 import { CtaBanner } from './components/CtaBanner';
 import { DisqusForum } from './components/DisqusForum';
 import { NewsletterFooter } from './components/NewsletterFooter';
@@ -269,7 +268,6 @@ export default function App() {
       {activeTab === 'carparks' && <LiveCarparksView />}
       {activeTab === 'sustainability' && <SustainabilityView userProfile={userProfile} />}
       {activeTab === 'admin' && <AdminFleetDashboard />}
-      {activeTab === 'specifications' && <ProductArchitectureView />}
 
       {/* CTA Section (Always rendered on catalog view) */}
       {activeTab === 'cars' && (

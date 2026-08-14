@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, ShieldCheck, Leaf, Car, MapPin, Calculator, HelpCircle, FileText, Smartphone, User, Sparkles, ParkingSquare } from 'lucide-react';
+import { Zap, ShieldCheck, Leaf, Car, MapPin, Calculator, HelpCircle, Smartphone, User, Sparkles, ParkingSquare } from 'lucide-react';
 import { UserEcoProfile, NavTab } from '../types';
 
 interface NavbarProps {
@@ -111,18 +111,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             Fleet Admin
           </button>
-
-          <button
-            onClick={() => setActiveTab('specifications')}
-            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1 ${
-              activeTab === 'specifications'
-                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
-                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
-            }`}
-          >
-            <FileText className="w-4 h-4 text-blue-600" />
-            Product Specs
-          </button>
         </nav>
 
         {/* Right Section / User & Download CTA */}
@@ -204,12 +192,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'admin' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Fleet Operations Admin
-          </button>
-          <button
-            onClick={() => { setActiveTab('specifications'); setMobileMenuOpen(false); }}
-            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'specifications' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
-          >
-            Product & Architecture Blueprint
           </button>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
             <button

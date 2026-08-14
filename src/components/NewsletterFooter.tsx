@@ -171,18 +171,18 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
             <ul className="space-y-2.5">
               <li>
                 <button
-                  onClick={() => onNavigate('specifications')}
+                  onClick={() => onNavigate('admin')}
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
-                  System Blueprint
+                  Fleet Telematics & Admin
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('admin')}
+                  onClick={() => onNavigate('rates')}
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
-                  Fleet Telematics
+                  Rates & Pricing Matrix
                 </button>
               </li>
               <li>
