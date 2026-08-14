@@ -1,6 +1,6 @@
 import React from 'react';
-import { FilterState, FuelType, VehicleType, VehicleCategory } from '../types';
-import { RotateCcw, Zap, Sparkles } from 'lucide-react';
+import { FilterState, VehicleType, VehicleCategory } from '../types';
+import { RotateCcw, Zap } from 'lucide-react';
 
 interface SidebarFiltersProps {
   filters: FilterState;
@@ -13,16 +13,6 @@ export const SidebarFilters: React.FC<SidebarFiltersProps> = ({
   setFilters,
   totalMatches
 }) => {
-  const handleFuelToggle = (fuel: FuelType) => {
-    setFilters(prev => {
-      const exists = prev.fuelTypes.includes(fuel);
-      const newFuel = exists
-        ? prev.fuelTypes.filter(f => f !== fuel)
-        : [...prev.fuelTypes, fuel];
-      return { ...prev, fuelTypes: newFuel };
-    });
-  };
-
   const handleVehicleTypeToggle = (type: VehicleType) => {
     setFilters(prev => {
       const exists = prev.vehicleTypes.includes(type);
@@ -67,7 +57,6 @@ export const SidebarFilters: React.FC<SidebarFiltersProps> = ({
     });
   };
 
-  const fuelOptions: FuelType[] = ['Electric'];
   const vehicleTypeOptions: VehicleType[] = ['SUV', 'MPV', 'Van'];
   const categoryOptions: VehicleCategory[] = [
     'Select Electric',
@@ -112,25 +101,14 @@ export const SidebarFilters: React.FC<SidebarFiltersProps> = ({
         <h3 className="text-sm font-bold text-[#191b25] mb-3">
           Fuel type
         </h3>
-        <div className="flex flex-col gap-2.5">
-          {fuelOptions.map(fuel => (
-            <label key={fuel} className="flex items-center gap-2.5 cursor-pointer group select-none">
-              <input
-                type="checkbox"
-                checked={filters.fuelTypes.includes(fuel)}
-                onChange={() => handleFuelToggle(fuel)}
-                className="rounded border-[#c4c5da] text-[#0034c5] focus:ring-[#0034c5] h-4 w-4 accent-[#0034c5] cursor-pointer"
-              />
-              <span className="text-base text-[#434657] group-hover:text-[#0034c5] transition-colors flex items-center gap-1.5">
-                {fuel}
-                {fuel === 'Electric' && (
-                  <span className="text-[10px] uppercase font-bold bg-[#dde1ff] text-[#0034c5] px-1.5 py-0.2 rounded">
-                    Green
-                  </span>
-                )}
-              </span>
-            </label>
-          ))}
+        <div className="flex items-center justify-between py-2 px-3 bg-emerald-50 border border-emerald-200/80 rounded-xl text-xs font-semibold text-emerald-900">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-emerald-600" />
+            <span className="text-sm font-bold text-[#191b25]">Electric</span>
+          </div>
+          <span className="text-[10px] uppercase font-bold bg-emerald-600 text-white px-2 py-0.5 rounded-full">
+            100% EV
+          </span>
         </div>
       </div>
 
