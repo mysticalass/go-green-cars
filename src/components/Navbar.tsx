@@ -1,10 +1,10 @@
 import React from 'react';
-import { Zap, ShieldCheck, Leaf, Car, MapPin, Calculator, HelpCircle, FileText, Smartphone, User, Sparkles } from 'lucide-react';
-import { UserEcoProfile } from '../types';
+import { Zap, ShieldCheck, Leaf, Car, MapPin, Calculator, HelpCircle, FileText, Smartphone, User, Sparkles, ParkingSquare } from 'lucide-react';
+import { UserEcoProfile, NavTab } from '../types';
 
 interface NavbarProps {
-  activeTab: 'cars' | 'rates' | 'locations' | 'sustainability' | 'admin' | 'specifications';
-  setActiveTab: (tab: 'cars' | 'rates' | 'locations' | 'sustainability' | 'admin' | 'specifications') => void;
+  activeTab: NavTab;
+  setActiveTab: (tab: NavTab) => void;
   userProfile: UserEcoProfile;
   onOpenBookingSummary?: () => void;
   onOpenSupport: () => void;
@@ -64,6 +64,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             Locations & Chargers
+          </button>
+
+          <button
+            onClick={() => setActiveTab('carparks')}
+            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
+              activeTab === 'carparks'
+                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
+                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
+            }`}
+          >
+            <ParkingSquare className="w-4 h-4 text-[#0034c5]" />
+            Live Carpark
           </button>
 
           <button
@@ -174,6 +186,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'locations' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Locations & Charging Hubs
+          </button>
+          <button
+            onClick={() => { setActiveTab('carparks'); setMobileMenuOpen(false); }}
+            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'carparks' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
+          >
+            Live Carpark Availability (HDB/LTA/URA)
           </button>
           <button
             onClick={() => { setActiveTab('sustainability'); setMobileMenuOpen(false); }}

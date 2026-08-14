@@ -5,6 +5,7 @@ import { VehicleCard } from './components/VehicleCard';
 import { VehicleDetailsModal } from './components/VehicleDetailsModal';
 import { BookingModal } from './components/BookingModal';
 import { LocationsView } from './components/LocationsView';
+import { LiveCarparksView } from './components/LiveCarparksView';
 import { RatesCalculatorView } from './components/RatesCalculatorView';
 import { SustainabilityView } from './components/SustainabilityView';
 import { AdminFleetDashboard } from './components/AdminFleetDashboard';
@@ -13,11 +14,11 @@ import { CtaBanner } from './components/CtaBanner';
 import { NewsletterFooter } from './components/NewsletterFooter';
 import { SupportChatModal } from './components/SupportChatModal';
 import { VEHICLES_DATA, DEFAULT_USER_PROFILE } from './data/mockData';
-import { Vehicle, FilterState, Booking, UserEcoProfile } from './types';
+import { Vehicle, FilterState, Booking, UserEcoProfile, NavTab } from './types';
 import { Search, Filter, MessageSquare, Zap, Leaf, RotateCcw, AlertCircle, ArrowUp } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'cars' | 'rates' | 'locations' | 'sustainability' | 'admin' | 'specifications'>('cars');
+  const [activeTab, setActiveTab] = useState<NavTab>('cars');
   const [userProfile, setUserProfile] = useState<UserEcoProfile>(DEFAULT_USER_PROFILE);
   const [bookings, setBookings] = useState<Booking[]>([]);
 
@@ -264,6 +265,7 @@ export default function App() {
       {/* Other Views */}
       {activeTab === 'rates' && <RatesCalculatorView />}
       {activeTab === 'locations' && <LocationsView onSelectVehicle={(v) => handleOpenBooking(v)} />}
+      {activeTab === 'carparks' && <LiveCarparksView />}
       {activeTab === 'sustainability' && <SustainabilityView userProfile={userProfile} />}
       {activeTab === 'admin' && <AdminFleetDashboard />}
       {activeTab === 'specifications' && <ProductArchitectureView />}

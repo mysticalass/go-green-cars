@@ -1,5 +1,22 @@
 export type FuelType = 'Electric' | 'Petrol' | 'Diesel' | 'Hybrid';
 
+export type NavTab = 'cars' | 'rates' | 'locations' | 'carparks' | 'sustainability' | 'admin' | 'specifications';
+
+export interface CarparkItem {
+  CarParkID: string;
+  Area: string;
+  Development: string;
+  Location: string;
+  AvailableLots: number;
+  LotType: 'C' | 'H' | 'Y' | string;
+  Agency: 'HDB' | 'LTA' | 'URA' | string;
+  lat?: number;
+  lng?: number;
+  hasEvCharging?: boolean;
+  totalLotsEstimated?: number;
+  occupancyPercent?: number;
+}
+
 export type VehicleType = 'SUV' | 'Sedan' | 'Van' | 'MPV' | 'Hatchback' | 'Station wagon';
 
 export type VehicleCategory = 

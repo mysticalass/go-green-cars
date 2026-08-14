@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Shield, Leaf, Zap, Heart } from 'lucide-react';
+import { CheckCircle2, Shield, Leaf, Zap, Heart, ParkingSquare } from 'lucide-react';
+import { NavTab } from '../types';
 
 interface NewsletterFooterProps {
-  onNavigate: (tab: 'cars' | 'rates' | 'locations' | 'sustainability' | 'admin' | 'specifications') => void;
+  onNavigate: (tab: NavTab) => void;
   onOpenSupport: () => void;
 }
 
@@ -134,6 +135,14 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
                   Locations & SP Hubs
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('carparks')}
+                  className="text-white/80 hover:text-white transition-colors text-sm text-left flex items-center gap-1.5"
+                >
+                  <ParkingSquare className="w-3.5 h-3.5 text-blue-400 inline" /> Live Carpark Lots (LTA)
                 </button>
               </li>
               <li>
