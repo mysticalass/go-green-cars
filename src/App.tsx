@@ -8,7 +8,6 @@ import { LocationsView } from './components/LocationsView';
 import { LiveCarparksView } from './components/LiveCarparksView';
 import { RatesCalculatorView } from './components/RatesCalculatorView';
 import { SustainabilityView } from './components/SustainabilityView';
-import { AdminFleetDashboard } from './components/AdminFleetDashboard';
 import { CtaBanner } from './components/CtaBanner';
 import { DisqusForum } from './components/DisqusForum';
 import { NewsletterFooter } from './components/NewsletterFooter';
@@ -267,7 +266,6 @@ export default function App() {
       {activeTab === 'locations' && <LocationsView onSelectVehicle={(v) => handleOpenBooking(v)} />}
       {activeTab === 'carparks' && <LiveCarparksView />}
       {activeTab === 'sustainability' && <SustainabilityView userProfile={userProfile} />}
-      {activeTab === 'admin' && <AdminFleetDashboard />}
 
       {/* CTA Section (Always rendered on catalog view) */}
       {activeTab === 'cars' && (

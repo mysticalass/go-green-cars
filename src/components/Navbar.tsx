@@ -100,17 +100,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Leaf className="w-4 h-4 text-emerald-600" />
             Impact
           </button>
-
-          <button
-            onClick={() => setActiveTab('admin')}
-            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg ${
-              activeTab === 'admin'
-                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
-                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
-            }`}
-          >
-            Fleet Admin
-          </button>
         </nav>
 
         {/* Right Section / User & Download CTA */}
@@ -186,12 +175,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'sustainability' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Sustainability Impact & EcoPoints
-          </button>
-          <button
-            onClick={() => { setActiveTab('admin'); setMobileMenuOpen(false); }}
-            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'admin' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
-          >
-            Fleet Operations Admin
           </button>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
             <button

@@ -1,6 +1,6 @@
 export type FuelType = 'Electric' | 'Petrol' | 'Diesel' | 'Hybrid';
 
-export type NavTab = 'cars' | 'rates' | 'locations' | 'carparks' | 'sustainability' | 'admin';
+export type NavTab = 'cars' | 'rates' | 'locations' | 'carparks' | 'sustainability';
 
 export interface CarparkItem {
   CarParkID: string;
