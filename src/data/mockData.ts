@@ -335,8 +335,8 @@ export const CHARGING_STATIONS: ChargingStation[] = [
 ];
 
 export const DEFAULT_USER_PROFILE: UserEcoProfile = {
-  name: 'Jane Low',
-  email: 'janelowys@gmail.com',
+  name: 'Susan Tan',
+  email: 'susantan@gmail.com',
   tier: 'Electric Gold',
   ecoPoints: 3450,
   totalTrips: 28,

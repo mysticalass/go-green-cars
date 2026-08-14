@@ -72,8 +72,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       co2SavedKg: co2SavedKg,
       status: 'confirmed',
       pickupLocation: vehicle.location,
-      userName: 'Jane Low',
-      userEmail: 'janelowys@gmail.com',
+      userName: 'Susan Tan',
+      userEmail: 'susantan@gmail.com',
       licenseVerified: true,
       paymentMethod: paymentMethod,
       digitalKeyUnlocked: false
@@ -263,7 +263,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               <div className="bg-[#fbf8ff] p-4 rounded-xl border border-[#c4c5da] text-left text-xs space-y-2 max-w-md mx-auto">
                 <div className="flex justify-between">
                   <span className="text-[#545e77]">Driver Name:</span>
-                  <span className="font-bold text-[#191b25]">Jane Low</span>
+                  <span className="font-bold text-[#191b25]">Susan Tan</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#545e77]">License Class:</span>

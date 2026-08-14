@@ -167,7 +167,7 @@ export const SustainabilityView: React.FC<SustainabilityViewProps> = ({ userProf
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
               <span className="text-xs font-bold text-emerald-700">2,500 Points</span>
               <button
-                onClick={() => alert('Planted 1 Native Tree in Singapore on behalf of Jane Low! Thank you for your environmental leadership.')}
+                onClick={() => alert(`Planted 1 Native Tree in Singapore on behalf of ${userProfile.name}! Thank you for your environmental leadership.`)}
                 className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
               >
                 Plant Tree
@@ -184,7 +184,7 @@ export const SustainabilityView: React.FC<SustainabilityViewProps> = ({ userProf
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
               <span className="text-xs font-bold text-purple-700">800 Points</span>
               <button
-                onClick={() => alert('Starbucks e-voucher barcode dispatched to janelowys@gmail.com!')}
+                onClick={() => alert(`Starbucks e-voucher barcode dispatched to ${userProfile.email}!`)}
                 className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
               >
                 Redeem
@@ -209,7 +209,7 @@ export const SustainabilityView: React.FC<SustainabilityViewProps> = ({ userProf
             <div className="bg-[#fbf8ff] p-5 rounded-xl border border-[#c4c5da] space-y-3 text-xs">
               <div className="flex justify-between border-b border-slate-200 pb-2">
                 <span className="text-[#545e77]">Issued To:</span>
-                <span className="font-bold text-[#191b25]">Jane Low</span>
+                <span className="font-bold text-[#191b25]">{userProfile.name}</span>
               </div>
               <div className="flex justify-between border-b border-slate-200 pb-2">
                 <span className="text-[#545e77]">Electric Fleet Miles Driven:</span>
