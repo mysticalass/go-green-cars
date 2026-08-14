@@ -336,38 +336,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
             <option value="CDG ENGIE">CDG ENGIE</option>
           </select>
         </div>
-
-        {/* Selected Origin Pill */}
-        <div className="flex flex-wrap items-center justify-between text-xs text-[#545e77] bg-[#fbf8ff] p-2.5 rounded-xl border border-[#c4c5da]">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[#0034c5]">Electric Car Departure Point:</span>
-            <span className="font-semibold text-[#191b25] bg-white px-2 py-0.5 rounded border border-[#c4c5da]">
-              {routeStartName}
-            </span>
-            <span className="text-[11px] text-[#545e77]">
-              ({routeStartCoords.lat.toFixed(4)}, {routeStartCoords.lng.toFixed(4)})
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 mt-1 sm:mt-0">
-            <button
-              onClick={() => handleReverseGeocode(1.3000, 103.8000)}
-              disabled={isRevGeocoding}
-              className="px-2.5 py-1 bg-white hover:bg-[#dde1ff] text-[#0034c5] font-bold rounded-lg border border-[#c4c5da] transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <Compass className={`w-3 h-3 ${isRevGeocoding ? 'animate-spin' : ''}`} />
-              <span>Test Reverse Geocode (Tanglin Halt)</span>
-            </button>
-            <button
-              onClick={() => handleReverseGeocode(1.3521, 103.8198)}
-              disabled={isRevGeocoding}
-              className="px-2.5 py-1 bg-white hover:bg-[#dde1ff] text-[#0034c5] font-bold rounded-lg border border-[#c4c5da] transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <Compass className="w-3 h-3" />
-              <span>Center Singapore (Bishan)</span>
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Main Grid: Stations List & OneMap Route Stage */}
