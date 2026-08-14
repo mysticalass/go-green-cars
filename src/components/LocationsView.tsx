@@ -10,10 +10,7 @@ import {
   ArrowRight,
   Route as RouteIcon,
   Compass,
-  Footprints,
   Car,
-  Bike,
-  Bus,
   Key,
   ShieldCheck,
   RefreshCw,
@@ -22,7 +19,9 @@ import {
   Sliders,
   ExternalLink,
   Info,
-  AlertCircle
+  AlertCircle,
+  BatteryCharging,
+  Gauge
 } from 'lucide-react';
 
 interface LocationsViewProps {
@@ -40,8 +39,8 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
   const [isSearchingOneMap, setIsSearchingOneMap] = useState<boolean>(false);
   const [selectedOneMapLoc, setSelectedOneMapLoc] = useState<OneMapSearchResult | null>(null);
 
-  // OneMap Route State
-  const [routeType, setRouteType] = useState<OneMapRouteType>('walk');
+  // OneMap Route State - Dedicated to EV Driving Navigation
+  const [routeType] = useState<OneMapRouteType>('drive');
   const [routeData, setRouteData] = useState<OneMapRouteResponse | null>(null);
   const [isLoadingRoute, setIsLoadingRoute] = useState<boolean>(false);
   const [routeStartName, setRouteStartName] = useState<string>('Raffles Place MRT (Central)');
@@ -106,13 +105,13 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Request Route from OneMap API
+  // Request EV Route from OneMap API
   const handleCalculateRoute = async (
     startLat: number = routeStartCoords.lat,
     startLng: number = routeStartCoords.lng,
     endLat: number = activeStation.lat,
     endLng: number = activeStation.lng,
-    mode: OneMapRouteType = routeType
+    mode: OneMapRouteType = 'drive'
   ) => {
     setIsLoadingRoute(true);
     try {
@@ -133,12 +132,12 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
     }
   };
 
-  // Trigger route calculation when station or route type changes
+  // Trigger route calculation when station or origin changes
   useEffect(() => {
     if (activeStation) {
-      handleCalculateRoute(routeStartCoords.lat, routeStartCoords.lng, activeStation.lat, activeStation.lng, routeType);
+      handleCalculateRoute(routeStartCoords.lat, routeStartCoords.lng, activeStation.lat, activeStation.lng, 'drive');
     }
-  }, [activeStation, routeType]);
+  }, [activeStation, routeStartCoords]);
 
   // Perform Reverse Geocoding via OneMap
   const handleReverseGeocode = async (lat: number, lng: number) => {
@@ -151,7 +150,7 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
         setRevGeocodeResult(top);
         setRouteStartName(top.BUILDINGNAME !== 'NIL' ? top.BUILDINGNAME : `${top.BLOCK} ${top.ROAD}`);
         setRouteStartCoords({ lat, lng });
-        handleCalculateRoute(lat, lng, activeStation.lat, activeStation.lng, routeType);
+        handleCalculateRoute(lat, lng, activeStation.lat, activeStation.lng, 'drive');
       }
     } catch (err) {
       console.error('OneMap reverse geocoding error', err);
@@ -219,8 +218,14 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
       }
     });
     setActiveStation(closest);
-    handleCalculateRoute(lat, lng, closest.lat, closest.lng, routeType);
+    handleCalculateRoute(lat, lng, closest.lat, closest.lng, 'drive');
   };
+
+  const estDistanceKm = routeData?.route_summary?.total_distance
+    ? (routeData.route_summary.total_distance / 1000)
+    : 0;
+  const estBatteryKwh = estDistanceKm > 0 ? (estDistanceKm * 0.15).toFixed(1) : '0.0';
+  const estChargingSpeed = activeStation.fastChargingKw;
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -229,17 +234,20 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-[#0034c5] text-xs font-bold">
-              <MapPin className="w-3.5 h-3.5" /> 1,700+ Singapore Hubs
+              <Car className="w-3.5 h-3.5" /> 1,700+ Singapore EV Hubs & Chargers
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> OneMap Gov SG Active
+              <Zap className="w-3.5 h-3.5 text-emerald-600" /> Live EV Charging Lot Telemetry
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-[#0034c5] text-xs font-bold">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#0034c5]" /> OneMap Gov SG Navigation Active
             </span>
           </div>
           <h1 className="text-3xl lg:text-4xl font-bold text-[#191b25] tracking-tight">
-            Locations, Hubs & OneMap Route Navigation
+            EV Hubs, Chargers & OneMap Route Navigation
           </h1>
           <p className="text-sm lg:text-base text-[#545e77] mt-1">
-            Official Singapore SLA OneMap elastic geocoding, multi-modal turn-by-turn routing, and live EV charging availability.
+            Singapore SLA OneMap live geocoding, turn-by-turn EV driving navigation to charging hubs, real-time charger lots, and available fleet cars.
           </p>
         </div>
 
@@ -264,7 +272,7 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search via OneMap (e.g. 'Raffles Place', 'Jewel Changi', 'Orchard ION', '049247')..."
+              placeholder="Search EV charging hub or address via OneMap (e.g. 'Raffles Place', 'Jewel Changi', 'Orchard ION', '049247')..."
               className="w-full pl-10 pr-10 py-2.5 bg-white border border-[#c4c5da] rounded-xl text-sm focus:outline-hidden focus:border-[#0034c5]"
             />
             {isSearchingOneMap && (
@@ -332,7 +340,7 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
         {/* Selected Origin Pill */}
         <div className="flex flex-wrap items-center justify-between text-xs text-[#545e77] bg-[#fbf8ff] p-2.5 rounded-xl border border-[#c4c5da]">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-[#0034c5]">Active Route Origin:</span>
+            <span className="font-bold text-[#0034c5]">Electric Car Departure Point:</span>
             <span className="font-semibold text-[#191b25] bg-white px-2 py-0.5 rounded border border-[#c4c5da]">
               {routeStartName}
             </span>
@@ -403,81 +411,62 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
                 {/* Parked Ready Electric Cars Count */}
                 <div className="mt-2 flex items-center justify-between text-[11px] text-[#0034c5] bg-white/80 px-2.5 py-1 rounded-lg border border-blue-100">
                   <span className="font-semibold">🚗 {station.parkedVehicles.length} Go Green EVs ready on-site</span>
-                  <span className="font-bold">Select & Navigate →</span>
+                  <span className="font-bold">Drive to Charger →</span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Right: OneMap Route Planner & Station Details */}
+        {/* Right: OneMap EV Route Planner & Station Details */}
         <div className="lg:col-span-7 space-y-6">
           {/* OneMap Routing Visualizer Card */}
           <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-xs space-y-5">
-            {/* Route Mode Switcher */}
+            {/* Route Mode Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
               <div>
                 <h3 className="font-bold text-base text-[#191b25] flex items-center gap-2">
-                  <RouteIcon className="w-4 h-4 text-[#0034c5]" />
-                  OneMap Multi-Modal Route Navigation
+                  <Car className="w-4 h-4 text-[#0034c5]" />
+                  OneMap EV Route & Charger Navigation
                 </h3>
                 <p className="text-xs text-[#545e77]">
                   From <span className="font-semibold text-[#191b25]">{routeStartName}</span> to <span className="font-semibold text-[#191b25]">{activeStation.name}</span>
                 </p>
               </div>
 
-              {/* Mode Buttons */}
-              <div className="flex items-center gap-1 bg-[#f3f2ff] p-1 rounded-xl border border-[#c4c5da]">
-                <button
-                  onClick={() => setRouteType('walk')}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                    routeType === 'walk' ? 'bg-[#0034c5] text-white shadow-xs' : 'text-[#434657] hover:text-[#0034c5]'
-                  }`}
-                >
-                  <Footprints className="w-3.5 h-3.5" /> Walk
-                </button>
-                <button
-                  onClick={() => setRouteType('drive')}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                    routeType === 'drive' ? 'bg-[#0034c5] text-white shadow-xs' : 'text-[#434657] hover:text-[#0034c5]'
-                  }`}
-                >
-                  <Car className="w-3.5 h-3.5" /> Drive EV
-                </button>
-                <button
-                  onClick={() => setRouteType('cycle')}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                    routeType === 'cycle' ? 'bg-[#0034c5] text-white shadow-xs' : 'text-[#434657] hover:text-[#0034c5]'
-                  }`}
-                >
-                  <Bike className="w-3.5 h-3.5" /> Cycle
-                </button>
-                <button
-                  onClick={() => setRouteType('pt')}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                    routeType === 'pt' ? 'bg-[#0034c5] text-white shadow-xs' : 'text-[#434657] hover:text-[#0034c5]'
-                  }`}
-                >
-                  <Bus className="w-3.5 h-3.5" /> Transit
-                </button>
+              {/* EV Navigation Badge */}
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0034c5] text-white text-xs font-bold shadow-xs">
+                  <Car className="w-3.5 h-3.5" /> EV Drive Route
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+                  <Zap className="w-3 h-3 text-emerald-600" /> {activeStation.fastChargingKw}kW DC Fast
+                </span>
               </div>
             </div>
 
             {/* Visual Map Stage with Route Stats */}
-            <div className="relative h-60 w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-inner flex flex-col justify-between p-4 text-white">
+            <div className="relative h-64 w-full bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-inner flex flex-col justify-between p-4 text-white">
               {/* Top Stats Bar */}
-              <div className="flex justify-between items-center z-10">
-                <span className="text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-xs border border-white/20 flex items-center gap-1.5">
-                  <Clock className="w-3 h-3 text-blue-400" />
-                  {routeData?.route_summary?.total_time
-                    ? `${Math.ceil(routeData.route_summary.total_time / 60)} mins`
-                    : 'Calculating ETA...'}
-                </span>
-                <span className="text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-xs border border-white/20">
-                  {routeData?.route_summary?.total_distance
-                    ? `${(routeData.route_summary.total_distance / 1000).toFixed(2)} km distance`
-                    : 'OneMap Gov SG Routing'}
-                </span>
+              <div className="flex flex-wrap justify-between items-center gap-2 z-10">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-xs border border-white/20 flex items-center gap-1.5">
+                    <Clock className="w-3 h-3 text-blue-400" />
+                    {routeData?.route_summary?.total_time
+                      ? `${Math.ceil(routeData.route_summary.total_time / 60)} mins drive`
+                      : 'Calculating Drive ETA...'}
+                  </span>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded bg-black/70 backdrop-blur-xs border border-white/20 flex items-center gap-1.5">
+                    <Gauge className="w-3 h-3 text-emerald-400" />
+                    {estDistanceKm > 0 ? `${estDistanceKm.toFixed(2)} km` : 'OneMap Gov SG Routing'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold px-2.5 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                    <BatteryCharging className="w-3.5 h-3.5 text-emerald-400" />
+                    Est. Energy: ~{estBatteryKwh} kWh
+                  </span>
+                </div>
               </div>
 
               {/* Dynamic Singapore Map Visual Polyline */}
@@ -489,27 +478,30 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
               {/* Waypoints Center Pins */}
               <div className="z-10 flex items-center justify-around my-auto">
                 <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-lg">
-                    A
+                  <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-lg ring-2 ring-emerald-400/40">
+                    <Car className="w-4 h-4" />
                   </div>
-                  <span className="text-[10px] font-bold mt-1 bg-black/80 px-2 py-0.5 rounded border border-white/10 max-w-[120px] truncate">
+                  <span className="text-[10px] font-bold mt-1 bg-black/80 px-2 py-0.5 rounded border border-white/10 max-w-[120px] truncate text-center">
                     {routeStartName}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1 text-blue-300 text-xs font-bold animate-pulse">
-                  <span>••••</span>
-                  <span className="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] uppercase">
-                    {routeType}
-                  </span>
-                  <span>••••</span>
+                <div className="flex flex-col items-center gap-0.5 text-blue-300 text-xs font-bold animate-pulse">
+                  <div className="flex items-center gap-1">
+                    <span>••••</span>
+                    <span className="px-2.5 py-0.5 rounded bg-blue-600 text-white text-[10px] uppercase font-mono tracking-wider flex items-center gap-1">
+                      <Zap className="w-2.5 h-2.5" /> EV DRIVE PATH
+                    </span>
+                    <span>••••</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-300 font-normal">Optimal Route</span>
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-[#0046ff] text-white flex items-center justify-center text-xs font-bold shadow-lg ring-2 ring-blue-400/50">
-                    B
+                  <div className="w-9 h-9 rounded-full bg-[#0046ff] text-white flex items-center justify-center text-xs font-bold shadow-lg ring-2 ring-blue-400/50">
+                    <Zap className="w-4 h-4 text-yellow-300" />
                   </div>
-                  <span className="text-[10px] font-bold mt-1 bg-black/80 px-2 py-0.5 rounded border border-white/10 max-w-[120px] truncate">
+                  <span className="text-[10px] font-bold mt-1 bg-black/80 px-2 py-0.5 rounded border border-white/10 max-w-[120px] truncate text-center">
                     {activeStation.name}
                   </span>
                 </div>
@@ -517,29 +509,61 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
 
               {/* Map Footer Action */}
               <div className="flex justify-between items-center z-10 pt-2 border-t border-white/10 text-xs">
-                <span className="text-white/80 truncate max-w-[280px]">
-                  Target: {activeStation.address}
+                <span className="text-white/80 truncate max-w-[280px] flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                  Charger: {activeStation.address}
                 </span>
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${activeStation.lat},${activeStation.lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-[#b9c3ff] hover:text-white flex items-center gap-1 transition-colors"
+                  className="font-bold text-[#b9c3ff] hover:text-white flex items-center gap-1 transition-colors bg-white/10 px-2.5 py-1 rounded"
                 >
-                  <span>Open In Maps</span>
+                  <span>Open GPS Navigation</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
 
-            {/* Step-by-Step Instructions Accordion/List */}
+            {/* EV Driving Details & Charger Lot Status Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#fbf8ff] p-3.5 rounded-xl border border-[#c4c5da] text-xs">
+              <div>
+                <span className="text-[#545e77] block text-[11px]">Free EV Lots</span>
+                <span className="font-bold text-emerald-700 text-sm">
+                  {activeStation.availableLots} / {activeStation.totalLots} Lots
+                </span>
+              </div>
+              <div>
+                <span className="text-[#545e77] block text-[11px]">DC Fast Rate</span>
+                <span className="font-bold text-[#0034c5] text-sm">
+                  {activeStation.fastChargingKw} kW
+                </span>
+              </div>
+              <div>
+                <span className="text-[#545e77] block text-[11px]">Tariff Rate</span>
+                <span className="font-bold text-[#191b25] text-sm">
+                  ${activeStation.pricePerKwh.toFixed(2)}/kWh
+                </span>
+              </div>
+              <div>
+                <span className="text-[#545e77] block text-[11px]">EVs at Location</span>
+                <span className="font-bold text-[#0034c5] text-sm">
+                  {activeStation.parkedVehicles.length} Ready Cars
+                </span>
+              </div>
+            </div>
+
+            {/* Step-by-Step Driving Instructions */}
             {routeData?.route_instructions && routeData.route_instructions.length > 0 && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-[#191b25]">
-                  <span>Turn-by-Turn Directions ({routeData.route_instructions.length} steps)</span>
-                  <span className="text-[#0034c5]">OneMap Navigation Engine</span>
+                  <span className="flex items-center gap-1.5">
+                    <Navigation className="w-3.5 h-3.5 text-[#0034c5]" />
+                    EV Driving Turn-by-Turn Directions ({routeData.route_instructions.length} steps)
+                  </span>
+                  <span className="text-[#0034c5] text-[11px]">OneMap SLA Navigation Engine</span>
                 </div>
-                <div className="max-h-36 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar text-xs">
+                <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar text-xs">
                   {routeData.route_instructions.map((step, sIdx) => {
                     const action = step[0] || 'Proceed';
                     const road = step[1] || 'Road';
@@ -548,16 +572,18 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
                     return (
                       <div
                         key={sIdx}
-                        className="p-2 rounded-lg bg-[#fbf8ff] border border-[#E2E8F0] flex items-center justify-between gap-2"
+                        className="p-2.5 rounded-lg bg-[#fbf8ff] border border-[#E2E8F0] flex items-center justify-between gap-2 hover:border-[#0034c5]/40 transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="w-4 h-4 rounded-full bg-blue-100 text-[#0034c5] font-bold text-[10px] flex items-center justify-center flex-shrink-0">
+                          <span className="w-5 h-5 rounded-full bg-blue-100 text-[#0034c5] font-bold text-[10px] flex items-center justify-center flex-shrink-0">
                             {sIdx + 1}
                           </span>
                           <span className="text-[#191b25] font-medium">{instruction}</span>
                         </div>
                         {dist && (
-                          <span className="text-[11px] text-[#545e77] font-semibold whitespace-nowrap">{dist}</span>
+                          <span className="text-[11px] text-[#545e77] font-semibold whitespace-nowrap bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                            {dist}
+                          </span>
                         )}
                       </div>
                     );
@@ -570,7 +596,8 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
           {/* Parked Electric Vehicles Ready For Immediate Pickup */}
           <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-xs">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-sm font-bold text-[#191b25] uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-[#191b25] uppercase tracking-wider flex items-center gap-2">
+                <Car className="w-4 h-4 text-[#0034c5]" />
                 Electric Vehicles Parked & Ready at this Hub ({activeStation.parkedVehicles.length})
               </h3>
             </div>
@@ -639,7 +666,7 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
               </p>
               <div className="text-[11px] text-[#545e77] flex flex-wrap gap-3 pt-1">
                 <span><strong>Header:</strong> AccountKey / Authorization: Bearer</span>
-                <span><strong>Supported Modes:</strong> walk, drive, cycle, pt</span>
+                <span><strong>Service:</strong> SLA OneMap Public Routing & Elastic Geocoding</span>
               </div>
             </div>
 
