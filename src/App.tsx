@@ -11,6 +11,7 @@ import { SustainabilityView } from './components/SustainabilityView';
 import { AdminFleetDashboard } from './components/AdminFleetDashboard';
 import { ProductArchitectureView } from './components/ProductArchitectureView';
 import { CtaBanner } from './components/CtaBanner';
+import { DisqusForum } from './components/DisqusForum';
 import { NewsletterFooter } from './components/NewsletterFooter';
 import { SupportChatModal } from './components/SupportChatModal';
 import { VEHICLES_DATA, DEFAULT_USER_PROFILE } from './data/mockData';
@@ -279,6 +280,9 @@ export default function App() {
           }}
         />
       )}
+
+      {/* Community Discussion Forum (Disqus) */}
+      <DisqusForum pageIdentifier={`go-green-cars-${activeTab}`} />
 
       {/* Weekly Newsletter & Footer */}
       <NewsletterFooter

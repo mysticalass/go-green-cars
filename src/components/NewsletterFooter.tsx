@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Shield, Leaf, Zap, Heart, ParkingSquare } from 'lucide-react';
+import { CheckCircle2, Shield, Leaf, Zap, Heart, ParkingSquare, MessageSquare } from 'lucide-react';
 import { NavTab } from '../types';
 
 interface NewsletterFooterProps {
@@ -183,6 +183,17 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
                   Fleet Telematics
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('community-discussion');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-white/80 hover:text-white transition-colors text-sm text-left flex items-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-blue-400 inline" /> Community Forum (Disqus)
                 </button>
               </li>
               <li>
