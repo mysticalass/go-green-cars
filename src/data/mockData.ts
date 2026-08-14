@@ -1,4 +1,9 @@
 import { Vehicle, ChargingStation, UserEcoProfile } from '../types';
+import konaEvImg from '../assets/images/gogreen_kona_ev_1786692710717.jpg';
+import ioniq5Img from '../assets/images/gogreen_ioniq5_ev_1786692725201.jpg';
+import atto3Img from '../assets/images/gogreen_atto3_ev_1786692737789.jpg';
+import vanEvImg from '../assets/images/gogreen_van_ev_1786692751123.jpg';
+import e6MpvImg from '../assets/images/gogreen_e6_mpv_1786692766621.jpg';
 
 export const VEHICLES_DATA: Vehicle[] = [
   {
@@ -10,7 +15,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Select Electric',
     fuelType: 'Electric',
     seats: 5,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLuSV1IQofJxda6fGLZ2BBaGWcqy2YEMtiaOGZU0Zo_3sLSBH7NBpfo2ptla-N9KQQmmNkC1GrJNCf8HUvuhIuHZqR0B70OFsEHXnNhrmWmPaLtYkQl1U7Ec1LH1QHv0cD5URoXomaUlVh_EFWl5W_y6o7g9kBFjvWFpdGC1e_xrEzhn4SuQiLzwbeokEOedGUFa7ljCzDm6Xqpxv-ioRuJD0QhQtayl-YziHu_8YvgMufOAjm04ez14Wsw',
+    image: konaEvImg,
     rangeKm: 484,
     batteryCapacityKwh: 64.8,
     currentBatteryPercent: 88,
@@ -37,7 +42,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Plus Electric',
     fuelType: 'Electric',
     seats: 5,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLumN6bjS3GeTm9j-4cNCqQCy7X72Ddduq46faAOufWa6_HMO6YLWZob_pV7tVGkHYrASSmMNU14knjSzX7YIVE7cY86lDsTdbHcXsIzIGuWbwIgunpCxenn2K2I2HiQ-jFqClTNDboCiavqe-Fv5x11BJgGI9J99dQvOkkGf5FFsCh_3XK6W4Yd8YasF9iRqCV5yuevHBTbj9V3RHBfzoLZ5eOU0oGSgiaiEUFyse6kZJc1BqbIOFFjgA',
+    image: ioniq5Img,
     rangeKm: 481,
     batteryCapacityKwh: 72.6,
     currentBatteryPercent: 94,
@@ -64,7 +69,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Plus Electric',
     fuelType: 'Electric',
     seats: 5,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLvxgRQ9t_DF0r2efxqHXfqKRh2YnqRSo_zh5ArOiHt87C8FYU8zp5WKynF2OAbKbNMi0ny0SH45KbABrhCxNn9_JLWIVTbFj3nNB19sSwloNwJRP8I_iTOeduBw1b4fjnDvwkLlSFQ-cK0NVFqxfnW2XIAPYZU-JATJi4XmTyGR46zvOkCnp7DnOI-6ispwSSHqlHXCDeyWvZ6FQczdZHrflJ0LEOFa57wqgFGluHWEf6QXTc8aG5KnZkI',
+    image: atto3Img,
     rangeKm: 420,
     batteryCapacityKwh: 60.48,
     currentBatteryPercent: 78,
@@ -91,7 +96,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Commercial Electric',
     fuelType: 'Electric',
     seats: 2,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLvrWQJIL8BElI7Op0IOztwTg5sFBxDOpASZLl8EuXdEUHsSsDvnUGhlBhHESoB4LZSx86OhuEgXCqFrvmqasH3-1aloc8YI7D2kftFtwuaphohKdgt2Kirk7oMrmoKRz-s-tIsZyYEerL4eaWW4qr5ncDCADNckJARKnmNWB_HqGSlMo2wjDDPTf_eitCybOBQleURUxw7EJDkSHYAWcwS5uYZ-W-j-f2wC-vV2BQCQg8VDw8_X_fqxY3Q',
+    image: vanEvImg,
     rangeKm: 250,
     batteryCapacityKwh: 41.86,
     currentBatteryPercent: 82,
@@ -118,7 +123,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Commercial Electric',
     fuelType: 'Electric',
     seats: 2,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLuRPRp7CMoG8OtQG9VAENArmYxpJtDA3nfwz9h3NNHULnEiLZb2dyFgJ46DUvZYgpsm3FRkILxBVCKDrvwpHsaxRRkmcGILLWSvXuGhvY2UqbbladyYtIxHF6KxiAx-AerVBrVXuXQRCIrPQDY5fGEQu-yMhTkIX6N5LPaWUAcs4EW7p1hxkCNgoOlFFc-pDTHUrF56C4c-QMEE3XPAhf0nJ72RbuaPO-_ZO9T2SMaIzI6iOolkPpKKRRg',
+    image: vanEvImg,
     rangeKm: 268,
     batteryCapacityKwh: 38.7,
     currentBatteryPercent: 91,
@@ -145,7 +150,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Commercial Electric',
     fuelType: 'Electric',
     seats: 2,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLvSy_9hpeDbiqNtxOUMVXVqhPYNzpfcN3A4Wz7TG2ejXmKSndEUuStCsHKDXNvc6kr-vE21EDw9x20upVV3W7YguvDtzmNKn3w4KzajWGc_ZpD2F76qCm5u2JcqGBqA-XOvLCSGG5LzBfgwK4BDp3o6RfFCc_9mUfxQ0UCbj7ZoCi0F81jVDKA0aUGTSm5PXyOYmFmG0fjbB7glI0zPCKlA12vXbiRIXZawkHePZsLdUtL_nC7K74K4WzI',
+    image: vanEvImg,
     rangeKm: 300,
     batteryCapacityKwh: 44.9,
     currentBatteryPercent: 85,
@@ -172,7 +177,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Standard Electric',
     fuelType: 'Electric',
     seats: 5,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLtyb08JLggVIXtTUE30G43ZEhUQ5uaq9T3kxVPPeLBhZza5gFY7VGRCVDuS1bS_-xT3l5wyXd81Y7sbVRzqeOwroZLhunAJUAKuXFUL1-i9zalCl2IQwH0lfY5iFOpgpDQb5cbImPGAz79gg_utNGJcTVBn4Sa_Vvgm5rUR-cFcr-bXmht-upC05GmCw6PBI2hxxPZqh1opTG5pgh-OT-axAVcCDag_uYexNB1HIADVlwaofQuSfmNJew',
+    image: e6MpvImg,
     rangeKm: 522,
     batteryCapacityKwh: 71.7,
     currentBatteryPercent: 96,
@@ -199,7 +204,7 @@ export const VEHICLES_DATA: Vehicle[] = [
     category: 'Standard Electric',
     fuelType: 'Electric',
     seats: 5,
-    image: 'https://lh3.googleusercontent.com/aida/AP1WRLuSV1IQofJxda6fGLZ2BBaGWcqy2YEMtiaOGZU0Zo_3sLSBH7NBpfo2ptla-N9KQQmmNkC1GrJNCf8HUvuhIuHZqR0B70OFsEHXnNhrmWmPaLtYkQl1U7Ec1LH1QHv0cD5URoXomaUlVh_EFWl5W_y6o7g9kBFjvWFpdGC1e_xrEzhn4SuQiLzwbeokEOedGUFa7ljCzDm6Xqpxv-ioRuJD0QhQtayl-YziHu_8YvgMufOAjm04ez14Wsw',
+    image: konaEvImg,
     rangeKm: 305,
     batteryCapacityKwh: 39.2,
     currentBatteryPercent: 74,

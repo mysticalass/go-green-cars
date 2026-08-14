@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Zap } from 'lucide-react';
+import heroBannerImg from '../assets/images/gogreen_hero_banner_1786692780151.jpg';
 
 interface CtaBannerProps {
   onSearchLocation: (location: string) => void;
@@ -56,8 +57,9 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onSearchLocation }) => {
         {/* Right lifestyle garage car image */}
         <div className="w-full md:w-1/2 h-64 md:h-auto relative overflow-hidden">
           <img
-            src="https://lh3.googleusercontent.com/aida/AP1WRLtStK4Kk98DiOYWatB_xTTKxunx6ua0liZ48xQ3tF0c1ccp41QJS9oyxAQKZxVpAMjs_8o79vie6uyV7j3SirrpAgseGSItNjGqYgUolxWMCdujnPJpaXezX-WpftTYzVETcOYFsb8dzlj63D-7pxH4Epxuzz42KGdVKf9rGx_JV1gEr0T4h2_rciE7-WjToo98XmRLz9rgQFTo2VLridrlRg9t6sdsEUKxDrrdLK0vHFiiXg5_Hvk9NWc"
+            src={heroBannerImg}
             alt="Go Green Cars electric vehicle in modern Singapore parking garage"
+            referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover object-center rounded-r-2xl md:rounded-l-none md:rounded-r-2xl rounded-b-2xl md:rounded-bl-none hover:scale-105 transition-transform duration-700"
           />
         </div>

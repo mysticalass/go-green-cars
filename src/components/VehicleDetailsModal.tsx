@@ -91,6 +91,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
               <img
                 src={vehicle.image}
                 alt={vehicle.name}
+                referrerPolicy="no-referrer"
                 className="w-full max-h-48 object-contain drop-shadow-xl"
               />
             </div>

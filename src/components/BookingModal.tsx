@@ -153,7 +153,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {step === 'details' && (
             <div className="space-y-4">
               <div className="flex items-center gap-4 bg-[#f3f2ff] p-4 rounded-xl border border-[#E2E8F0]">
-                <img src={vehicle.image} alt={vehicle.name} className="w-24 h-16 object-contain" />
+                <img src={vehicle.image} alt={vehicle.name} referrerPolicy="no-referrer" className="w-24 h-16 object-contain" />
                 <div>
                   <h4 className="font-bold text-sm text-[#191b25]">{vehicle.name}</h4>
                   <p className="text-xs text-[#545e77]">{vehicle.location}</p>

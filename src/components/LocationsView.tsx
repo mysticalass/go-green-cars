@@ -190,7 +190,7 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
                   className="bg-[#fbf8ff] p-4 rounded-xl border border-[#c4c5da] hover:border-[#0034c5] transition-all flex flex-col justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <img src={veh.image} alt={veh.name} className="w-20 h-14 object-contain" />
+                    <img src={veh.image} alt={veh.name} referrerPolicy="no-referrer" className="w-20 h-14 object-contain" />
                     <div>
                       <h4 className="font-bold text-sm text-[#191b25]">{veh.name}</h4>
                       <p className="text-xs text-[#545e77]">{veh.vehicleType} • {veh.seats} Seats</p>

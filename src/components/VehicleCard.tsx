@@ -73,6 +73,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
         <img
           src={vehicle.image}
           alt={vehicle.name}
+          referrerPolicy="no-referrer"
           className="absolute bottom-0 right-0 w-[110%] object-contain object-right-bottom scale-110 select-none pointer-events-none drop-shadow-md"
           loading="lazy"
         />
