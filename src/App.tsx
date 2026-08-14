@@ -265,7 +265,12 @@ export default function App() {
       {activeTab === 'rates' && <RatesCalculatorView />}
       {activeTab === 'locations' && <LocationsView onSelectVehicle={(v) => handleOpenBooking(v)} />}
       {activeTab === 'carparks' && <LiveCarparksView />}
-      {activeTab === 'sustainability' && <SustainabilityView userProfile={userProfile} />}
+      {activeTab === 'sustainability' && (
+        <SustainabilityView
+          userProfile={userProfile}
+          onUpdateProfile={setUserProfile}
+        />
+      )}
 
       {/* CTA Section (Always rendered on catalog view) */}
       {activeTab === 'cars' && (

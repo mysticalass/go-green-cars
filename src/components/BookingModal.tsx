@@ -42,11 +42,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const co2SavedKg = Number((estimatedKm * vehicle.co2SavedPerKmKg).toFixed(2));
 
   const handleApplyPromo = () => {
-    if (promoCode.trim().toUpperCase() === 'GREEN2026' || promoCode.trim().toUpperCase() === 'GOGREEN') {
+    const code = promoCode.trim().toUpperCase();
+    if (code === 'GREEN2026' || code === 'GOGREEN' || code.startsWith('ECO10') || code.startsWith('GREEN-10')) {
       setPromoApplied(true);
       showToast('Promo code applied: S$15.00 discount credited!');
     } else {
-      alert('Enter promo code GREEN2026 for S$15 OFF your ride.');
+      showToast('Invalid promo code. Try GREEN2026 or an EcoPoints voucher.');
     }
   };
 
