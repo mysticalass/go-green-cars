@@ -63,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
             }`}
           >
-            Locations & Chargers
+            Location Map & Chargers
           </button>
 
           <button
@@ -173,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => { setActiveTab('locations'); setMobileMenuOpen(false); }}
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'locations' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
-            Locations & Charging Hubs
+            Location Map & Chargers
           </button>
           <button
             onClick={() => { setActiveTab('carparks'); setMobileMenuOpen(false); }}

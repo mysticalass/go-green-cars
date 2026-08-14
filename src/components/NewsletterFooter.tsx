@@ -134,7 +134,7 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
                   onClick={() => onNavigate('locations')}
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
-                  Locations & SP Hubs
+                  Location Map & Chargers
                 </button>
               </li>
               <li>
