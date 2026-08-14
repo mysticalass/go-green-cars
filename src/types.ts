@@ -120,3 +120,57 @@ export interface UserEcoProfile {
   treesPlantedEquivalent: number;
   savedMoneyVsPetrolSgd: number;
 }
+
+export interface OneMapSearchResult {
+  SEARCHVAL: string;
+  BLK_NO: string;
+  ROAD_NAME: string;
+  BUILDING: string;
+  ADDRESS: string;
+  POSTAL: string;
+  X: string;
+  Y: string;
+  LATITUDE: string;
+  LONGITUDE: string;
+}
+
+export interface OneMapGeocodeInfo {
+  BUILDINGNAME: string;
+  BLOCK: string;
+  ROAD: string;
+  POSTALCODE: string;
+  XCOORD: string;
+  YCOORD: string;
+  LATITUDE: string;
+  LONGITUDE: string;
+}
+
+export type OneMapRouteType = 'walk' | 'drive' | 'cycle' | 'pt';
+
+export interface OneMapRouteInstruction {
+  action: string;
+  road: string;
+  distance: number;
+  coordinates: string;
+  durationSeconds: number;
+  distanceText: string;
+  heading: string;
+  turnDirection: string;
+  mode: string;
+  instructionText: string;
+}
+
+export interface OneMapRouteResponse {
+  status_message?: string;
+  route_geometry?: string;
+  status?: number;
+  route_instructions?: any[][];
+  route_summary?: {
+    total_distance?: number;
+    total_time?: number;
+    start_point?: string;
+    end_point?: string;
+  };
+  subtitle_summary?: string;
+}
+

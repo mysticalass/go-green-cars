@@ -287,6 +287,251 @@ app.post('/api/carparks/test-key', async (req, res) => {
 });
 
 // ----------------------------------------------------
+// ONEMAP SINGAPORE GOV API BACKEND INTEGRATION
+// ----------------------------------------------------
+
+let ONEMAP_TOKEN = process.env.ONEMAP_API_TOKEN ||
+  'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMTUyNywiZm9yZXZlciI6ZmFsc2UsImlzcyI6Ik9uZU1hcCIsImlhdCI6MTc4NjY5MzQ5NiwibmJmIjoxNzg2NjkzNDk2LCJleHAiOjE3ODY5NTI2OTYsImp0aSI6IjIwYmM1NzRkLTFiNmUtNGJmMS1hY2YwLWNkYjQ3YmM3M2Q3MSJ9.kVMyCqt3jymg6GYGH2w8aFU4FJYZYXkr2jQ-pbzy1UYrVU3CbABfFHLDgoss7xbAlpKjatsPpFz53ElSBaONzcpYcZTp-BhAcu_uGtidAcTaOQp40JWqvjVTjH0QOYUc4cNWqwXxkrFAXSLN7zoSoVuQ7gtURwvg1_ImzVYh9frOLG30iRpbJ6X8HvZrxpXkNmweCndnioVBHUUeiCG4vmCH-hbdZW7hycjXNdHcXfr6V9SSdlIyTjR3zRGnT8A6nlYgJM2xCEA8onjwvyl57UXFeSQh2kEea3xDR318-hZER35aiXMa2by93_6JSkCo_PTLbXejvZMGcNXZGOkLEA';
+
+/**
+ * Helper to get OneMap headers
+ */
+function getOneMapHeaders(customToken?: string) {
+  const token = customToken || ONEMAP_TOKEN;
+  return {
+    'Authorization': `Bearer ${token}`,
+    'AccountKey': token,
+    'accept': 'application/json'
+  };
+}
+
+/**
+ * 1. Mint a token (lasts 3 days)
+ * POST /api/onemap/token
+ * Body: { email: string, password: string }
+ */
+app.post('/api/onemap/token', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Both email and password are required to mint a OneMap token.'
+    });
+  }
+
+  try {
+    const response = await fetch('https://www.onemap.gov.sg/api/auth/post/getToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.access_token) {
+      ONEMAP_TOKEN = data.access_token;
+      return res.json({
+        success: true,
+        message: 'Successfully minted new OneMap API token (valid for 3 days).',
+        access_token: data.access_token,
+        expiry_timestamp: data.expiry_timestamp
+      });
+    } else {
+      return res.status(response.status || 400).json({
+        success: false,
+        error: data.error || data.message || 'Failed to authenticate with OneMap token generator.'
+      });
+    }
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Failed to mint OneMap token'
+    });
+  }
+});
+
+/**
+ * 2. Geocode / search (Elastic search)
+ * GET /api/onemap/search?searchVal=...&returnGeom=Y&getAddrDetails=Y&pageNum=1
+ */
+app.get('/api/onemap/search', async (req, res) => {
+  const searchVal = (req.query.searchVal as string) || '';
+  const returnGeom = (req.query.returnGeom as string) || 'Y';
+  const getAddrDetails = (req.query.getAddrDetails as string) || 'Y';
+  const pageNum = (req.query.pageNum as string) || '1';
+
+  if (!searchVal.trim()) {
+    return res.json({ success: true, found: 0, results: [] });
+  }
+
+  try {
+    const queryParams = new URLSearchParams({
+      searchVal: searchVal.trim(),
+      returnGeom,
+      getAddrDetails,
+      pageNum
+    });
+
+    const url = `https://www.onemap.gov.sg/api/common/elastic/search?${queryParams.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getOneMapHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error(`OneMap Search HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    res.json({
+      success: true,
+      found: data.found || (data.results ? data.results.length : 0),
+      totalNumPages: data.totalNumPages || 1,
+      pageNum: Number(pageNum),
+      results: data.results || []
+    });
+  } catch (err: any) {
+    console.error('[OneMap Search Error]:', err.message);
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Error executing OneMap geocoding search',
+      results: []
+    });
+  }
+});
+
+/**
+ * 3. Reverse geocode
+ * GET /api/onemap/revgeocode?location=1.3,103.8&buffer=40&addressType=All
+ */
+app.get('/api/onemap/revgeocode', async (req, res) => {
+  const location = (req.query.location as string) || '1.3,103.8';
+  const buffer = (req.query.buffer as string) || '40';
+  const addressType = (req.query.addressType as string) || 'All';
+
+  try {
+    const queryParams = new URLSearchParams({
+      location,
+      buffer,
+      addressType
+    });
+
+    const url = `https://www.onemap.gov.sg/api/public/revgeocode?${queryParams.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getOneMapHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error(`OneMap RevGeocode HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    res.json({
+      success: true,
+      location,
+      data: data.GeocodeInfo || []
+    });
+  } catch (err: any) {
+    console.error('[OneMap RevGeocode Error]:', err.message);
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Error executing OneMap reverse geocoding',
+      data: []
+    });
+  }
+});
+
+/**
+ * 4. Routing (walk | drive | cycle | pt)
+ * GET /api/onemap/route?start=1.320981,103.844150&end=1.326762,103.8559&routeType=walk
+ */
+app.get('/api/onemap/route', async (req, res) => {
+  const start = req.query.start as string;
+  const end = req.query.end as string;
+  const routeType = (req.query.routeType as string) || 'walk';
+
+  if (!start || !end) {
+    return res.status(400).json({
+      success: false,
+      message: 'Both start (lat,lng) and end (lat,lng) are required for routing.'
+    });
+  }
+
+  try {
+    const queryParams = new URLSearchParams({
+      start,
+      end,
+      routeType
+    });
+
+    const url = `https://www.onemap.gov.sg/api/public/routingsvc/route?${queryParams.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getOneMapHeaders()
+    });
+
+    if (!response.ok) {
+      throw new Error(`OneMap Route HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    res.json({
+      success: true,
+      routeType,
+      start,
+      end,
+      data
+    });
+  } catch (err: any) {
+    console.error('[OneMap Routing Error]:', err.message);
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Error computing route with OneMap',
+      error: err.message
+    });
+  }
+});
+
+/**
+ * 5. OneMap status and token test
+ * GET /api/onemap/status
+ */
+app.get('/api/onemap/status', (req, res) => {
+  res.json({
+    success: true,
+    service: 'OneMap Singapore Gov API Service',
+    tokenConfigured: Boolean(ONEMAP_TOKEN),
+    tokenPrefix: ONEMAP_TOKEN ? `${ONEMAP_TOKEN.slice(0, 16)}...` : 'None',
+    supportedRouteTypes: ['walk', 'drive', 'cycle', 'pt'],
+    endpoints: {
+      getToken: 'https://www.onemap.gov.sg/api/auth/post/getToken',
+      search: 'https://www.onemap.gov.sg/api/common/elastic/search',
+      revgeocode: 'https://www.onemap.gov.sg/api/public/revgeocode',
+      route: 'https://www.onemap.gov.sg/api/public/routingsvc/route'
+    }
+  });
+});
+
+/**
+ * Update active OneMap Token directly
+ * POST /api/onemap/set-token
+ */
+app.post('/api/onemap/set-token', (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.status(400).json({ success: false, message: 'Token is required' });
+  }
+  ONEMAP_TOKEN = token.trim();
+  res.json({
+    success: true,
+    message: 'OneMap API token updated successfully'
+  });
+});
+
+// ----------------------------------------------------
 // SERVER LAUNCH & VITE MIDDLEWARE
 // ----------------------------------------------------
 async function startServer() {

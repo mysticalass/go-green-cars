@@ -224,7 +224,11 @@ CREATE TABLE bookings (
             ['GET /api/v1/vehicles', 'lat, lng, radius_km, category, min_soc', 'Returns nearby available electric vehicles with real-time SoC & rates.'],
             ['POST /api/v1/bookings/reserve', '{ vehicle_id, start_time, end_time, cdw }', 'Creates reservation lock (15-minute grace window).'],
             ['POST /api/v1/telematics/unlock', '{ booking_id, bluetooth_token }', 'Sends secure cryptographic unlock pulse to vehicle IoT gateway.'],
-            ['GET /api/v1/charging/stations', 'lat, lng, operator', 'Fetches live charger availability from SP Mobility / Charge+ APIs.'],
+            ['GET /api/carparks', 'agency, lotType, area, search', 'Fetches live carpark and EV charging lot availability from Singapore LTA DataMall v2.'],
+            ['POST /api/onemap/token', '{ email, password }', 'Mints 3-day SLA OneMap API access token (https://www.onemap.gov.sg/api/auth/post/getToken).'],
+            ['GET /api/onemap/search', 'searchVal, returnGeom, getAddrDetails', 'OneMap Singapore elastic geocoding search for building names & postal codes.'],
+            ['GET /api/onemap/revgeocode', 'location, buffer, addressType', 'OneMap reverse geocoding from GPS coordinates to building and road details.'],
+            ['GET /api/onemap/route', 'start, end, routeType (walk|drive|cycle|pt)', 'OneMap turn-by-turn routing with geometry and duration estimates.'],
             ['POST /api/v1/bookings/return', '{ booking_id, photo_urls, plugged_in }', 'Finalizes trip, reads CAN-bus odometer, credits eco points, and charges card.']
           ]
         }
