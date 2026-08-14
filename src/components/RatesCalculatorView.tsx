@@ -12,16 +12,6 @@ export const RatesCalculatorView: React.FC = () => {
   const avgEvMileageRate = 0.39;
   
   const driveGreenWeeklyCost = (weeklyHours * avgEvHourlyRate) + (weeklyKm * avgEvMileageRate);
-  
-  // Traditional petrol car rental comparison (rental + petrol @ $2.85/L, 12km/L = $0.24/km + fuel surcharge)
-  const petrolCarRentalWeeklyCost = (weeklyHours * 12.50) + (weeklyKm * 0.24) + 15.00; // base + fuel + fuel admin fee
-  
-  // Ride hailing comparison (Grab/Tada avg $24 per 15km trip)
-  const rideHailingWeeklyCost = (weeklyKm / 12) * 18.50;
-
-  const weeklySavedVsPetrol = Math.max(0, petrolCarRentalWeeklyCost - driveGreenWeeklyCost);
-  const annualSavedVsPetrol = (weeklySavedVsPetrol * 52).toFixed(0);
-  
   const weeklyCo2SavedKg = (weeklyKm * 0.175).toFixed(1);
   const annualCo2SavedKg = (Number(weeklyCo2SavedKg) * 52).toFixed(0);
 
@@ -109,10 +99,10 @@ export const RatesCalculatorView: React.FC = () => {
       <div className="bg-[#f3f2ff] p-6 sm:p-8 rounded-2xl border border-[#0034c5]/20 space-y-6">
         <div className="max-w-xl">
           <h2 className="text-2xl font-bold text-[#191b25] flex items-center gap-2">
-            <Calculator className="w-6 h-6 text-[#0034c5]" /> How Much Can You Save Going 100% Electric?
+            <Calculator className="w-6 h-6 text-[#0034c5]" /> Interactive EV Cost & Carbon Estimator
           </h2>
           <p className="text-xs sm:text-sm text-[#545e77] mt-1">
-            Compare "Drive Green, Share Smart" against traditional petrol carsharing and ride-hailing services in Singapore.
+            Calculate your weekly all-inclusive rental costs and carbon emissions avoided with Go Green Cars.
           </p>
         </div>
 
@@ -170,44 +160,34 @@ export const RatesCalculatorView: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Comparison Metric Cards */}
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-white p-5 rounded-xl border-2 border-[#0034c5] shadow-md flex flex-col justify-between">
+          {/* Right Metric Cards */}
+          <div className="lg:col-span-6 flex flex-col gap-4">
+            <div className="bg-white p-6 rounded-xl border-2 border-[#0034c5] shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#0034c5] bg-blue-100 px-2 py-0.5 rounded">
                   Go Green Cars (100% EV)
                 </span>
                 <div className="text-3xl font-bold text-[#191b25] mt-2">${driveGreenWeeklyCost.toFixed(2)}</div>
-                <div className="text-xs text-[#545e77]">per week (All-inclusive)</div>
+                <div className="text-xs text-[#545e77]">per week (All-inclusive: zero fuel surcharge, free fast charging)</div>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 text-xs text-emerald-700 font-semibold flex items-center gap-1">
-                <Leaf className="w-4 h-4 text-emerald-600" />
-                <span>Avoids {weeklyCo2SavedKg} kg CO₂/wk</span>
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-xl border border-[#c4c5da] shadow-xs flex flex-col justify-between">
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                  Traditional Petrol Carsharing (Tribecar / Petrol Rentals)
-                </span>
-                <div className="text-3xl font-bold text-slate-700 mt-2">${petrolCarRentalWeeklyCost.toFixed(2)}</div>
-                <div className="text-xs text-[#545e77]">per week (incl. petrol top-ups)</div>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 text-xs text-red-600 font-medium">
-                + S${weeklySavedVsPetrol.toFixed(2)} higher cost
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 font-semibold flex items-center gap-2">
+                <Leaf className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div>
+                  <div className="font-bold">Avoids {weeklyCo2SavedKg} kg CO₂/wk</div>
+                  <div className="text-[11px] font-normal text-emerald-700">100% tailpipe emission free</div>
+                </div>
               </div>
             </div>
 
-            {/* Annual Savings Highlight */}
-            <div className="sm:col-span-2 bg-emerald-900 text-white p-5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Annual Environmental Impact */}
+            <div className="bg-emerald-900 text-white p-6 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h4 className="text-lg font-bold">Estimated Annual Savings with Go Green Cars:</h4>
+                <h4 className="text-lg font-bold">Annual Sustainability Impact:</h4>
                 <p className="text-xs text-emerald-200">Based on {weeklyHours} hrs & {weeklyKm} km weekly usage across Singapore.</p>
               </div>
-              <div className="text-right sm:text-right">
-                <div className="text-3xl font-bold text-emerald-300">S${annualSavedVsPetrol} / year</div>
-                <div className="text-xs text-emerald-100 font-medium">+{annualCo2SavedKg} kg CO₂ saved annually</div>
+              <div className="text-left sm:text-right">
+                <div className="text-3xl font-bold text-emerald-300">+{annualCo2SavedKg} kg</div>
+                <div className="text-xs text-emerald-100 font-medium">CO₂ emissions avoided per year</div>
               </div>
             </div>
           </div>
