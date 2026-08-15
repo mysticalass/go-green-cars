@@ -24,8 +24,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setActiveTab('cars')}
-            className="text-left flex items-center gap-2.5 focus:outline-hidden group"
+            onClick={() => setActiveTab('rates')}
+            className="text-left flex items-center gap-2.5 focus:outline-hidden group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-[#0034c5] flex items-center justify-center text-white shadow-md shadow-blue-900/20 group-hover:scale-105 transition-transform">
               <Zap className="w-6 h-6 text-white fill-white" />
@@ -79,17 +79,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('cars')}
-            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg ${
-              activeTab === 'cars'
-                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
-                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
-            }`}
-          >
-            Cars
-          </button>
-
-          <button
             onClick={() => setActiveTab('sustainability')}
             className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
               activeTab === 'sustainability'
@@ -100,14 +89,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Leaf className="w-4 h-4 text-emerald-600" />
             Impact
           </button>
+
+          <button
+            onClick={() => setActiveTab('profile')}
+            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
+              activeTab === 'profile'
+                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
+                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
+            }`}
+          >
+            <User className="w-4 h-4 text-[#0034c5]" />
+            Profile
+          </button>
         </nav>
 
         {/* Right Section / User & Download CTA */}
         <div className="flex items-center gap-3">
           {/* User Eco Status Pill */}
           <button
-            onClick={() => setActiveTab('sustainability')}
-            className="hidden lg:flex items-center gap-2 bg-[#f3f2ff] hover:bg-[#dde1ff] border border-[#c4c5da] text-xs font-semibold px-3 py-1.5 rounded-full text-[#191b25] transition-colors"
+            onClick={() => setActiveTab('profile')}
+            className={`hidden lg:flex items-center gap-2 border text-xs font-semibold px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
+              activeTab === 'profile' 
+                ? 'bg-[#dde1ff] border-[#0034c5] text-[#0034c5]' 
+                : 'bg-[#f3f2ff] hover:bg-[#dde1ff] border-[#c4c5da] text-[#191b25]'
+            }`}
           >
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span>{userProfile.name}</span>
@@ -147,12 +152,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#c4c5da] bg-white px-4 py-4 space-y-2">
           <button
-            onClick={() => { setActiveTab('cars'); setMobileMenuOpen(false); }}
-            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'cars' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
-          >
-            Cars & Fleet Catalog
-          </button>
-          <button
             onClick={() => { setActiveTab('rates'); setMobileMenuOpen(false); }}
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'rates' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
@@ -175,6 +174,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'sustainability' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Sustainability Impact & EcoPoints
+          </button>
+          <button
+            onClick={() => { setActiveTab('profile'); setMobileMenuOpen(false); }}
+            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm flex items-center justify-between ${activeTab === 'profile' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
+          >
+            <span>Driver Profile & Car Confirmations</span>
+            <span className="text-xs bg-[#0034c5] text-white px-2 py-0.5 rounded-full font-bold">Singpass</span>
           </button>
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
             <button

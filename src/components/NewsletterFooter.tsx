@@ -147,10 +147,10 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('cars')}
+                  onClick={() => onNavigate('profile')}
                   className="text-white/80 hover:text-white transition-colors text-sm text-left"
                 >
-                  Vehicles Catalog
+                  Driver Profile & Confirmations
                 </button>
               </li>
               <li>
