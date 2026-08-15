@@ -4,6 +4,7 @@ import { SidebarFilters } from './components/SidebarFilters';
 import { VehicleCard } from './components/VehicleCard';
 import { VehicleDetailsModal } from './components/VehicleDetailsModal';
 import { BookingModal } from './components/BookingModal';
+import { BookingPageView } from './components/BookingPageView';
 import { LocationsView } from './components/LocationsView';
 import { LiveCarparksView } from './components/LiveCarparksView';
 import { RatesCalculatorView } from './components/RatesCalculatorView';
@@ -26,6 +27,7 @@ export default function App() {
   const [bookingVehicle, setBookingVehicle] = useState<Vehicle | null>(null);
   const [bookingHours, setBookingHours] = useState<number>(3);
   const [bookingKm, setBookingKm] = useState<number>(45);
+  const [bookingDate, setBookingDate] = useState<string>('');
   const [supportOpen, setSupportOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
@@ -81,11 +83,16 @@ export default function App() {
     });
   }, [filters]);
 
-  const handleOpenBooking = (vehicle: Vehicle, hours: number = 3, estimatedKm: number = 45) => {
+  const handleOpenBooking = (vehicle: Vehicle, hours: number = 3, estimatedKm: number = 45, date?: string) => {
     setSelectedVehicle(null);
     setBookingVehicle(vehicle);
     setBookingHours(hours);
     setBookingKm(estimatedKm);
+    if (date) {
+      setBookingDate(date);
+    }
+    setActiveTab('booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCompleteBooking = (newBooking: Booking) => {
@@ -266,6 +273,19 @@ export default function App() {
         </main>
       )}
 
+      {activeTab === 'booking' && (
+        <BookingPageView
+          vehicle={bookingVehicle}
+          initialHours={bookingHours}
+          initialEstimatedKm={bookingKm}
+          initialDate={bookingDate}
+          userProfile={userProfile}
+          onBackToCars={() => setActiveTab('cars')}
+          onCompleteBooking={handleCompleteBooking}
+          onOpenSupport={() => setSupportOpen(true)}
+        />
+      )}
+
       {activeTab === 'profile' && (
         <ProfileView
           userProfile={userProfile}
@@ -303,13 +323,14 @@ export default function App() {
       <VehicleDetailsModal
         vehicle={selectedVehicle}
         onClose={() => setSelectedVehicle(null)}
-        onBookNow={(veh, hours, km) => handleOpenBooking(veh, hours, km)}
+        onBookNow={(veh, hours, km, date) => handleOpenBooking(veh, hours, km, date)}
       />
 
       <BookingModal
         vehicle={bookingVehicle}
         initialHours={bookingHours}
         initialEstimatedKm={bookingKm}
+        initialDate={bookingDate}
         onClose={() => setBookingVehicle(null)}
         onCompleteBooking={handleCompleteBooking}
       />

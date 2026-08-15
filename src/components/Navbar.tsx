@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setActiveTab('cars')}
             className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
-              activeTab === 'cars'
+              activeTab === 'cars' || activeTab === 'booking'
                 ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
                 : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
             }`}
@@ -183,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => { setActiveTab('cars'); setMobileMenuOpen(false); }}
-            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'cars' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
+            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'cars' || activeTab === 'booking' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Cars & Fleet Catalog
           </button>

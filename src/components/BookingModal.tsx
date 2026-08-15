@@ -1,25 +1,80 @@
 import React, { useState } from 'react';
 import { Vehicle, Booking } from '../types';
-import { X, CheckCircle2, Shield, Lock, Unlock, Zap, Car, Leaf, CreditCard, QrCode, Smartphone, AlertCircle, KeyRound, Bell } from 'lucide-react';
+import { X, CheckCircle2, Shield, Lock, Unlock, Zap, Car, Leaf, CreditCard, QrCode, Smartphone, AlertCircle, KeyRound, Bell, Calendar, Clock } from 'lucide-react';
 
 interface BookingModalProps {
   vehicle: Vehicle | null;
   initialHours?: number;
   initialEstimatedKm?: number;
+  initialDate?: string;
   onClose: () => void;
   onCompleteBooking: (booking: Booking) => void;
 }
+
+// Generate upcoming 14 dates for dropdown selection
+const generateDateOptions = () => {
+  const options = [];
+  const today = new Date();
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const iso = d.toISOString().split('T')[0];
+    const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : d.toLocaleDateString('en-SG', { weekday: 'short' });
+    const formatted = `${dayName} (${d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })})`;
+    options.push({ value: iso, label: formatted });
+  }
+  return options;
+};
+
+const DATE_OPTIONS = generateDateOptions();
+
+const HOUR_OPTIONS = [
+  { value: 1, label: '1 hour (Quick hop)' },
+  { value: 2, label: '2 hours (Short trip)' },
+  { value: 3, label: '3 hours (Standard - Recommended)' },
+  { value: 4, label: '4 hours (Half-day)' },
+  { value: 5, label: '5 hours' },
+  { value: 6, label: '6 hours (Island tour)' },
+  { value: 8, label: '8 hours (Full working day)' },
+  { value: 10, label: '10 hours (Extended day)' },
+  { value: 12, label: '12 hours (12-hr package)' },
+  { value: 24, label: '24 hours / 1 Day (Daily saver)' },
+  { value: 48, label: '48 hours / 2 Days (Weekend)' },
+  { value: 72, label: '72 hours / 3 Days (Long trip)' },
+];
+
+const TIME_OPTIONS = [
+  'Now (Immediate Access)',
+  '08:00 AM',
+  '09:00 AM',
+  '10:00 AM',
+  '11:00 AM',
+  '12:00 PM (Noon)',
+  '01:00 PM',
+  '02:00 PM',
+  '03:00 PM',
+  '04:00 PM',
+  '05:00 PM',
+  '06:00 PM (Evening)',
+  '07:00 PM',
+  '08:00 PM',
+  '09:00 PM',
+  '10:00 PM'
+];
 
 export const BookingModal: React.FC<BookingModalProps> = ({
   vehicle,
   initialHours = 3,
   initialEstimatedKm = 40,
+  initialDate,
   onClose,
   onCompleteBooking
 }) => {
   if (!vehicle) return null;
 
   const [step, setStep] = useState<'details' | 'license' | 'payment' | 'confirmed'>('details');
+  const [selectedDate, setSelectedDate] = useState(initialDate || DATE_OPTIONS[0].value);
+  const [pickupTime, setPickupTime] = useState('Now (Immediate Access)');
   const [hours, setHours] = useState(initialHours);
   const [estimatedKm, setEstimatedKm] = useState(initialEstimatedKm);
   const [cdwPlus, setCdwPlus] = useState(true);
@@ -57,12 +112,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   const handleConfirmReservation = () => {
+    // Construct real start and end timestamps based on selected date
+    const startIso = selectedDate 
+      ? new Date(`${selectedDate}T09:00:00`).toISOString() 
+      : new Date().toISOString();
+    const startDateObj = new Date(startIso);
+    const endIso = new Date(startDateObj.getTime() + hours * 3600000).toISOString();
+
     const newBooking: Booking = {
       id: `BK-${Math.floor(100000 + Math.random() * 900000)}`,
       vehicleId: vehicle.id,
       vehicle: vehicle,
-      startTime: new Date().toISOString(),
-      endTime: new Date(Date.now() + hours * 3600000).toISOString(),
+      startTime: startIso,
+      endTime: endIso,
       durationHours: hours,
       estimatedKm: estimatedKm,
       baseFare: baseFare,
@@ -164,16 +226,81 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
               </div>
 
-              {/* Rental Duration Slider */}
-              <div>
+              {/* Trip Selection Drop Down Menus */}
+              <div className="bg-[#fbf8ff] p-4 rounded-xl border border-[#c4c5da] space-y-3">
+                <h5 className="text-xs font-bold text-[#191b25] uppercase tracking-wider">
+                  Reservation Schedule
+                </h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Date Drop Down Menu */}
+                  <div>
+                    <label className="block text-xs font-bold text-[#191b25] mb-1.5 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-[#0034c5]" />
+                      <span>Rental Date (Drop Down)</span>
+                    </label>
+                    <select
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full text-xs font-semibold bg-white text-[#191b25] border border-[#c4c5da] rounded-xl p-2.5 focus:outline-hidden focus:border-[#0034c5] focus:ring-2 focus:ring-[#0034c5]/20 cursor-pointer shadow-xs"
+                    >
+                      {DATE_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Number of Hours Drop Down Menu */}
+                  <div>
+                    <label className="block text-xs font-bold text-[#191b25] mb-1.5 flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-[#0034c5]" />
+                      <span>Number of Hours (Drop Down)</span>
+                    </label>
+                    <select
+                      value={hours}
+                      onChange={(e) => setHours(Number(e.target.value))}
+                      className="w-full text-xs font-semibold bg-white text-[#191b25] border border-[#c4c5da] rounded-xl p-2.5 focus:outline-hidden focus:border-[#0034c5] focus:ring-2 focus:ring-[#0034c5]/20 cursor-pointer shadow-xs"
+                    >
+                      {HOUR_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label} — ${(opt.value * vehicle.hourlyRateOffPeak).toFixed(2)} SGD
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Pickup Time Slot Drop Down */}
+                <div>
+                  <label className="block text-xs font-bold text-[#191b25] mb-1.5 flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-[#0034c5]" />
+                    <span>Pick-up Time Slot</span>
+                  </label>
+                  <select
+                    value={pickupTime}
+                    onChange={(e) => setPickupTime(e.target.value)}
+                    className="w-full text-xs font-semibold bg-white text-[#191b25] border border-[#c4c5da] rounded-xl p-2.5 focus:outline-hidden focus:border-[#0034c5] focus:ring-2 focus:ring-[#0034c5]/20 cursor-pointer shadow-xs"
+                  >
+                    {TIME_OPTIONS.map(time => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Rental Duration Fine-Tuning Slider */}
+              <div className="bg-white p-3.5 rounded-xl border border-[#E2E8F0]">
                 <div className="flex justify-between text-xs font-bold text-[#191b25] mb-1">
-                  <span>Rental Duration: {hours} hours</span>
+                  <span>Fine-Tune Duration: {hours} hours ({hours >= 24 ? `${Math.floor(hours/24)} days` : 'Hourly'})</span>
                   <span className="text-[#0034c5]">${(hours * vehicle.hourlyRateOffPeak).toFixed(2)} SGD</span>
                 </div>
                 <input
                   type="range"
                   min="1"
-                  max="24"
+                  max="72"
                   value={hours}
                   onChange={(e) => setHours(Number(e.target.value))}
                   className="w-full accent-[#0034c5] cursor-pointer"

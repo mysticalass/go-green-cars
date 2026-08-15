@@ -1,6 +1,6 @@
 export type FuelType = 'Electric' | 'Petrol' | 'Diesel' | 'Hybrid';
 
-export type NavTab = 'rates' | 'locations' | 'carparks' | 'sustainability' | 'profile' | 'cars';
+export type NavTab = 'rates' | 'locations' | 'carparks' | 'sustainability' | 'profile' | 'cars' | 'booking';
 
 export interface CarparkItem {
   CarParkID: string;
@@ -92,6 +92,7 @@ export interface Booking {
   licenseVerified: boolean;
   paymentMethod: 'PayNow' | 'Credit Card' | 'EcoPoints';
   digitalKeyUnlocked?: boolean;
+  bookingRef?: string;
 }
 
 export interface ChargingStation {

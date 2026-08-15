@@ -1,6 +1,6 @@
 import React from 'react';
 import { Vehicle } from '../types';
-import { Zap, BatteryCharging, Gauge, MapPin, ArrowRight, Shield } from 'lucide-react';
+import { Zap, BatteryCharging, Gauge, ArrowRight } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -80,16 +80,16 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       </div>
 
       {/* Action Footer overlay on hover/active */}
-      <div className="p-4 pt-2 bg-white/95 border-t border-[#f0effe] flex items-center gap-2 z-20">
+      <div className="p-4 bg-white/95 border-t border-[#f0effe] flex items-center gap-2 z-20">
         <button
           onClick={() => onSelect(vehicle)}
-          className="flex-1 py-2 px-3 text-xs font-bold text-[#0034c5] bg-[#f3f2ff] hover:bg-[#dde1ff] rounded-lg transition-colors text-center cursor-pointer"
+          className="flex-1 py-2.5 px-3 text-xs font-bold text-[#0034c5] bg-[#f3f2ff] hover:bg-[#dde1ff] rounded-lg transition-colors text-center cursor-pointer"
         >
-          View Specs & Range
+          View Specs
         </button>
         <button
           onClick={() => onQuickBook(vehicle)}
-          className="flex-1 py-2 px-3 text-xs font-bold text-white bg-[#0034c5] hover:bg-[#00248c] rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-1 cursor-pointer"
+          className="flex-1 py-2.5 px-3 text-xs font-bold text-white bg-[#0034c5] hover:bg-[#00248c] rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-1 cursor-pointer"
         >
           <span>Book Now</span>
           <ArrowRight className="w-3.5 h-3.5" />

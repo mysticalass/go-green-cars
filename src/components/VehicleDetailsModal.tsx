@@ -5,8 +5,39 @@ import { X, Zap, BatteryCharging, Gauge, MapPin, CheckCircle2, Shield, Calendar,
 interface VehicleDetailsModalProps {
   vehicle: Vehicle | null;
   onClose: () => void;
-  onBookNow: (vehicle: Vehicle, hours: number, estimatedKm: number) => void;
+  onBookNow: (vehicle: Vehicle, hours: number, estimatedKm: number, date?: string) => void;
 }
+
+// Generate upcoming 14 dates for dropdown selection
+const generateDateOptions = () => {
+  const options = [];
+  const today = new Date();
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const iso = d.toISOString().split('T')[0];
+    const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : d.toLocaleDateString('en-SG', { weekday: 'short' });
+    const formatted = `${dayName} (${d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })})`;
+    options.push({ value: iso, label: formatted });
+  }
+  return options;
+};
+
+const DATE_OPTIONS = generateDateOptions();
+
+const HOUR_OPTIONS = [
+  { value: 1, label: '1 hour' },
+  { value: 2, label: '2 hours' },
+  { value: 3, label: '3 hours (Standard)' },
+  { value: 4, label: '4 hours' },
+  { value: 5, label: '5 hours' },
+  { value: 6, label: '6 hours' },
+  { value: 8, label: '8 hours' },
+  { value: 10, label: '10 hours' },
+  { value: 12, label: '12 hours' },
+  { value: 24, label: '24 hours / 1 Day' },
+  { value: 48, label: '48 hours / 2 Days' },
+];
 
 export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
   vehicle,
@@ -15,6 +46,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
 }) => {
   if (!vehicle) return null;
 
+  const [selectedDate, setSelectedDate] = useState(DATE_OPTIONS[0].value);
   const [hours, setHours] = useState(3);
   const [estimatedKm, setEstimatedKm] = useState(45);
   const [isPeak, setIsPeak] = useState(false);
@@ -142,11 +174,50 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-              {/* Sliders */}
+              {/* Dropdowns & Sliders */}
               <div className="space-y-4">
+                {/* Date and Hours Dropdown Menus */}
+                <div className="grid grid-cols-2 gap-2 bg-white p-3 rounded-xl border border-[#c4c5da]">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#191b25] mb-1 flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-[#0034c5]" />
+                      <span>Rental Date</span>
+                    </label>
+                    <select
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full text-xs font-semibold bg-[#fbf8ff] text-[#191b25] border border-[#c4c5da] rounded-lg p-2 focus:outline-hidden cursor-pointer"
+                    >
+                      {DATE_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#191b25] mb-1 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#0034c5]" />
+                      <span>Rental Duration</span>
+                    </label>
+                    <select
+                      value={hours}
+                      onChange={(e) => setHours(Number(e.target.value))}
+                      className="w-full text-xs font-semibold bg-[#fbf8ff] text-[#191b25] border border-[#c4c5da] rounded-lg p-2 focus:outline-hidden cursor-pointer"
+                    >
+                      {HOUR_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 <div>
                   <div className="flex justify-between text-xs font-bold text-[#191b25] mb-1">
-                    <span>Rental Duration</span>
+                    <span>Fine-tune Hours</span>
                     <span className="text-[#0034c5]">{hours} hours ({hours >= 24 ? `${Math.floor(hours/24)} days` : 'Hourly'})</span>
                   </div>
                   <input
@@ -158,12 +229,6 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                     onChange={(e) => setHours(Number(e.target.value))}
                     className="w-full accent-[#0034c5] cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-[#747688]">
-                    <span>1 hr</span>
-                    <span>12 hrs</span>
-                    <span>24 hrs (Day Pass)</span>
-                    <span>48 hrs</span>
-                  </div>
                 </div>
 
                 <div>
@@ -180,12 +245,6 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
                     onChange={(e) => setEstimatedKm(Number(e.target.value))}
                     className="w-full accent-[#0034c5] cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-[#747688]">
-                    <span>5 km (CBD run)</span>
-                    <span>50 km (Cross-island)</span>
-                    <span>150 km (Full day)</span>
-                    <span>300 km</span>
-                  </div>
                 </div>
               </div>
 
@@ -235,7 +294,7 @@ export const VehicleDetailsModal: React.FC<VehicleDetailsModalProps> = ({
               Cancel
             </button>
             <button
-              onClick={() => onBookNow(vehicle, hours, estimatedKm)}
+              onClick={() => onBookNow(vehicle, hours, estimatedKm, selectedDate)}
               className="flex-1 sm:flex-none px-6 py-2.5 bg-[#0034c5] hover:bg-[#00248c] text-white text-sm font-bold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <span>Confirm & Reserve EV</span>
