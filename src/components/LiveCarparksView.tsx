@@ -38,7 +38,6 @@ export const LiveCarparksView: React.FC<LiveCarparksViewProps> = ({ onSelectCarp
     message: 'Connected to LTA DataMall v2 (AccountKey authenticated)',
     source: 'lta-live'
   });
-  const [showTechModal, setShowTechModal] = useState(false);
   const [countdown, setCountdown] = useState<number>(45);
 
   // Filters
@@ -275,15 +274,6 @@ export const LiveCarparksView: React.FC<LiveCarparksViewProps> = ({ onSelectCarp
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
-
-            {/* Technical API Key Info Button */}
-            <button
-              onClick={() => setShowTechModal(true)}
-              className="px-4 py-2.5 bg-[#0034c5] hover:bg-[#00248c] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <Info className="w-4 h-4" />
-              API Specs & Key
-            </button>
           </div>
         </div>
 
@@ -808,90 +798,7 @@ export const LiveCarparksView: React.FC<LiveCarparksViewProps> = ({ onSelectCarp
             </div>
           </div>
         )}
-
-        {/* Integration Specs Notice Banner */}
-        <div className="bg-[#001257] text-white rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-200 bg-blue-900/50 px-2.5 py-1 rounded-full border border-blue-700/50">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Singapore Land Transport Authority Open Data Service
-            </div>
-            <h3 className="text-xl font-bold">LTA DataMall CarParkAvailabilityv2 Integration</h3>
-            <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-              Provides real-time lot availability across all Singapore parking agencies with zero manual intervention. Automatically refreshes every 45 seconds for EV drivers and commuters.
-            </p>
-          </div>
-          
-          <button
-            onClick={() => setShowTechModal(true)}
-            className="px-5 py-3 bg-[#dde1ff] hover:bg-white text-[#0034c5] text-xs font-bold rounded-xl shadow-md transition-all shrink-0 cursor-pointer flex items-center gap-2"
-          >
-            <Info className="w-4 h-4" /> View Technical Backend Docs
-          </button>
-        </div>
-
       </div>
-
-      {/* Technical Backend Details Modal */}
-      {showTechModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex justify-between items-start">
-              <div>
-                <span className="text-xs uppercase font-bold text-[#0034c5] bg-blue-100 px-2.5 py-1 rounded">
-                  LTA DataMall v2 Architecture
-                </span>
-                <h3 className="text-xl font-bold text-[#191b25] mt-2">
-                  Live Carpark Backend Logic
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowTechModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs text-[#545e77]">
-              <div className="bg-[#f3f2ff] p-4 rounded-xl border border-blue-200 space-y-2">
-                <div className="font-bold text-[#191b25]">Target LTA Endpoint:</div>
-                <div className="font-mono bg-white p-2.5 rounded-lg border border-slate-200 text-[#0034c5] text-[11px] break-all select-all">
-                  https://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2
-                </div>
-
-                <div className="font-bold text-[#191b25] pt-1">Required Authentication Header:</div>
-                <div className="font-mono bg-white p-2.5 rounded-lg border border-slate-200 text-slate-800 text-[11px] select-all">
-                  AccountKey: 1c4c4681977bf8332d3c6f138c44cd7d
-                </div>
-              </div>
-
-              <div className="space-y-1.5 pt-1">
-                <h4 className="font-bold text-[#191b25]">Agency Coverage:</h4>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li><strong>HDB:</strong> Housing & Development Board Multi-Storey Car Parks (MSCP) across heartland towns.</li>
-                  <li><strong>LTA:</strong> Major commercial shopping malls, CBD transport interchanges, and rail hubs.</li>
-                  <li><strong>URA:</strong> Urban Redevelopment Authority street-level and surface parking bays.</li>
-                  <li><strong>Lot Types:</strong> LotType C (Cars), LotType Y (Motorcycles), LotType H (Heavy Vehicles).</li>
-                </ul>
-              </div>
-
-              <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-emerald-800 text-[11px]">
-                <strong>Server Caching & Rate-Limiting:</strong> Backend endpoint <code className="font-mono">/api/carparks</code> buffers responses for 45 seconds with instantaneous background refreshes to maintain peak responsiveness.
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setShowTechModal(false)}
-                className="px-5 py-2 bg-[#0034c5] text-white text-xs font-bold rounded-xl hover:bg-[#00248c] transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

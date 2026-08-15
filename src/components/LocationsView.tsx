@@ -53,15 +53,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
   const [revGeocodeResult, setRevGeocodeResult] = useState<OneMapGeocodeInfo | null>(null);
   const [isRevGeocoding, setIsRevGeocoding] = useState<boolean>(false);
 
-  // Token Minting & Dev Tools Modal
-  const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
-  const [mintEmail, setMintEmail] = useState<string>('');
-  const [mintPassword, setMintPassword] = useState<string>('');
-  const [mintStatus, setMintStatus] = useState<{ loading: boolean; message?: string; success?: boolean }>({
-    loading: false
-  });
-  const [apiTelemetry, setApiTelemetry] = useState<any>(null);
-
   // Filter stations based on Area, Operator, and Search
   const filteredStations = CHARGING_STATIONS.filter(st => {
     const matchesArea = selectedArea === 'All' || st.area === selectedArea;
@@ -71,14 +62,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
       st.address.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesArea && matchesOperator && matchesSearch;
   });
-
-  // Fetch OneMap API telemetry on mount
-  useEffect(() => {
-    fetch('/api/onemap/status')
-      .then(res => res.json())
-      .then(data => setApiTelemetry(data))
-      .catch(err => console.error('Failed to get OneMap status', err));
-  }, []);
 
   // Debounced OneMap Geocode Search
   useEffect(() => {
@@ -159,44 +142,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
     }
   };
 
-  // Mint new OneMap Token
-  const handleMintToken = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!mintEmail || !mintPassword) return;
-
-    setMintStatus({ loading: true });
-    try {
-      const res = await fetch('/api/onemap/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: mintEmail, password: mintPassword })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setMintStatus({
-          loading: false,
-          success: true,
-          message: 'Token successfully minted and active for 3 days!'
-        });
-        // Refresh telemetry
-        const statusRes = await fetch('/api/onemap/status');
-        setApiTelemetry(await statusRes.json());
-      } else {
-        setMintStatus({
-          loading: false,
-          success: false,
-          message: data.error || data.message || 'Authentication error from OneMap portal'
-        });
-      }
-    } catch (err: any) {
-      setMintStatus({
-        loading: false,
-        success: false,
-        message: err.message || 'Network error while contacting OneMap'
-      });
-    }
-  };
-
   // Pick a search result from OneMap
   const handleSelectOneMapResult = (item: OneMapSearchResult) => {
     const lat = parseFloat(item.LATITUDE);
@@ -249,17 +194,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
           <p className="text-sm lg:text-base text-[#545e77] mt-1">
             Singapore SLA OneMap live geocoding, turn-by-turn EV driving navigation to charging hubs, real-time charger lots, and available fleet cars.
           </p>
-        </div>
-
-        {/* Action / Token Tools */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowTokenModal(true)}
-            className="px-3.5 py-2 rounded-xl bg-white border border-[#c4c5da] hover:border-[#0034c5] text-xs font-bold text-[#0034c5] flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
-          >
-            <Key className="w-3.5 h-3.5 text-[#0034c5]" />
-            OneMap Token & API Tools
-          </button>
         </div>
       </div>
 
@@ -603,112 +537,6 @@ export const LocationsView: React.FC<LocationsViewProps> = ({ onSelectVehicle })
           </div>
         </div>
       </div>
-
-      {/* OneMap Token Minting & Developer Telemetry Modal */}
-      {showTokenModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-2">
-                <Key className="w-5 h-5 text-[#0034c5]" />
-                <h3 className="font-bold text-lg text-[#191b25]">OneMap Singapore Gov API Console</h3>
-              </div>
-              <button
-                onClick={() => setShowTokenModal(false)}
-                className="text-slate-400 hover:text-slate-700 font-bold text-lg cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Current Active Token Telemetry */}
-            <div className="bg-[#f3f2ff] p-4 rounded-xl border border-[#c4c5da] space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#0034c5]">Active Token Authentication:</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-bold">
-                  ✓ Active (3-Day JWT Valid)
-                </span>
-              </div>
-              <p className="text-xs font-mono text-[#545e77] break-all bg-white p-2 rounded border border-slate-200">
-                {apiTelemetry?.tokenPrefix || 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...'}
-              </p>
-              <div className="text-[11px] text-[#545e77] flex flex-wrap gap-3 pt-1">
-                <span><strong>Header:</strong> AccountKey / Authorization: Bearer</span>
-                <span><strong>Service:</strong> SLA OneMap Public Routing & Elastic Geocoding</span>
-              </div>
-            </div>
-
-            {/* Mint New Token Form (https://www.onemap.gov.sg/api/auth/post/getToken) */}
-            <form onSubmit={handleMintToken} className="space-y-4 border border-slate-200 p-4 rounded-xl">
-              <div>
-                <h4 className="font-bold text-sm text-[#191b25] flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#0034c5]" />
-                  Mint New 3-Day OneMap Token
-                </h4>
-                <p className="text-xs text-[#545e77] mt-0.5">
-                  Sends POST request to <code>https://www.onemap.gov.sg/api/auth/post/getToken</code>
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-[#191b25] mb-1">OneMap Registered Email</label>
-                  <input
-                    type="email"
-                    value={mintEmail}
-                    onChange={(e) => setMintEmail(e.target.value)}
-                    placeholder="developer@agency.gov.sg"
-                    className="w-full px-3 py-2 text-xs border border-[#c4c5da] rounded-lg focus:outline-hidden focus:border-[#0034c5]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-[#191b25] mb-1">OneMap Password</label>
-                  <input
-                    type="password"
-                    value={mintPassword}
-                    onChange={(e) => setMintPassword(e.target.value)}
-                    placeholder="••••••••••••"
-                    className="w-full px-3 py-2 text-xs border border-[#c4c5da] rounded-lg focus:outline-hidden focus:border-[#0034c5]"
-                  />
-                </div>
-              </div>
-
-              {mintStatus.message && (
-                <div className={`p-3 rounded-lg text-xs font-medium ${mintStatus.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
-                  {mintStatus.message}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={mintStatus.loading}
-                className="w-full py-2.5 bg-[#0034c5] hover:bg-[#00248c] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {mintStatus.loading ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Minting OneMap Token...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Generate & Activate OneMap Token</span>
-                  </>
-                )}
-              </button>
-            </form>
-
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowTokenModal(false)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-[#191b25] font-bold text-xs rounded-xl transition-colors cursor-pointer"
-              >
-                Close Console
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

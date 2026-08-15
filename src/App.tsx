@@ -8,7 +8,6 @@ import { LocationsView } from './components/LocationsView';
 import { LiveCarparksView } from './components/LiveCarparksView';
 import { RatesCalculatorView } from './components/RatesCalculatorView';
 import { SustainabilityView } from './components/SustainabilityView';
-import { CtaBanner } from './components/CtaBanner';
 import { DisqusForum } from './components/DisqusForum';
 import { NewsletterFooter } from './components/NewsletterFooter';
 import { SupportChatModal } from './components/SupportChatModal';
@@ -269,16 +268,6 @@ export default function App() {
         <SustainabilityView
           userProfile={userProfile}
           onUpdateProfile={setUserProfile}
-        />
-      )}
-
-      {/* CTA Section (Always rendered on catalog view) */}
-      {activeTab === 'cars' && (
-        <CtaBanner
-          onSearchLocation={(loc) => {
-            setFilters(prev => ({ ...prev, searchQuery: loc }));
-            window.scrollTo({ top: 120, behavior: 'smooth' });
-          }}
         />
       )}
 
