@@ -79,6 +79,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            onClick={() => setActiveTab('cars')}
+            className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
+              activeTab === 'cars'
+                ? 'text-[#0034c5] font-bold bg-[#dde1ff]'
+                : 'text-[#434657] hover:text-[#0034c5] hover:bg-[#f3f2ff]'
+            }`}
+          >
+            <Car className="w-4 h-4 text-[#0034c5]" />
+            Cars
+          </button>
+
+          <button
             onClick={() => setActiveTab('sustainability')}
             className={`text-sm font-medium transition-colors px-3.5 py-2 rounded-lg flex items-center gap-1.5 ${
               activeTab === 'sustainability'
@@ -168,6 +180,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'carparks' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
           >
             Live Carpark Availability (HDB/LTA/URA)
+          </button>
+          <button
+            onClick={() => { setActiveTab('cars'); setMobileMenuOpen(false); }}
+            className={`w-full text-left px-3 py-2 rounded-md font-medium text-sm ${activeTab === 'cars' ? 'bg-[#dde1ff] text-[#0034c5] font-bold' : 'text-[#434657]'}`}
+          >
+            Cars & Fleet Catalog
           </button>
           <button
             onClick={() => { setActiveTab('sustainability'); setMobileMenuOpen(false); }}

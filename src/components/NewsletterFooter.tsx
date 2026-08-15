@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Shield, Leaf, Zap, Heart, ParkingSquare, MessageSquare } from 'lucide-react';
+import { CheckCircle2, Shield, Leaf, Zap, Heart, ParkingSquare, MessageSquare, Car } from 'lucide-react';
 import { NavTab } from '../types';
 
 interface NewsletterFooterProps {
@@ -143,6 +143,14 @@ export const NewsletterFooter: React.FC<NewsletterFooterProps> = ({
                   className="text-white/80 hover:text-white transition-colors text-sm text-left flex items-center gap-1.5"
                 >
                   <ParkingSquare className="w-3.5 h-3.5 text-blue-400 inline" /> Live Carpark Lots (LTA)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('cars')}
+                  className="text-white/80 hover:text-white transition-colors text-sm text-left flex items-center gap-1.5"
+                >
+                  <Car className="w-3.5 h-3.5 text-blue-400 inline" /> 100% EV Fleet Catalog
                 </button>
               </li>
               <li>
